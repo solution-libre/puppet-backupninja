@@ -7,8 +7,12 @@
   "source": "https://github.com/solution-libre/puppet-backupninja",
   "project_page": "https://github.com/solution-libre/puppet-backupninja",
   "issues_url": "https://github.com/solution-libre/puppet-backupninja/issues",
-  "tags": [ "backup", "backupninja", "shell" ],
-
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 2.3.0 < 5.0.0"
+    }
+  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
@@ -34,8 +38,17 @@
       ]
     }
   ],
-
-  "dependencies": [
-    { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.3.0 < 5.0.0" }
-  ]
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.7.0 < 6.0.0"
+    }
+  ],
+  "tags": [
+    "backup",
+    "backupninja",
+    "shell"
+  ],
+  "template-url": "file://C:/PROGRA~1/PUPPET~1/DevelopmentKit/share/cache/pdk-templates.git",
+  "template-ref": "1.3.0-0-g632fa63"
 }
