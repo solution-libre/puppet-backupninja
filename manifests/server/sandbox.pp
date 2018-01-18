@@ -72,78 +72,76 @@ define backupninja::server::sandbox (
       tag    => $real_backuptag,
     }
   }
-  case $installuser {
-    true: {
-      if $manage_ssh_dir {
-        if !defined(File[$real_ssh_dir]) {
-          @@file { $real_ssh_dir:
-            ensure  => directory,
-            mode    => '0700',
-            owner   => $real_user,
+  if $installuser {
+    if $manage_ssh_dir {
+      if !defined(File[$real_ssh_dir]) {
+        @@file { $real_ssh_dir:
+          ensure  => directory,
+          mode    => '0700',
+          owner   => $real_user,
+          group   => 0,
+          tag     => $real_backuptag,
+          require => [
+            User[$real_user],
+            File[$real_dir],
+            ],
+        }
+      }
+    }
+    case $key {
+      false: {
+        if !defined(File["${real_ssh_dir}/${real_authorized_keys_file}"]) {
+          @@file { "${real_ssh_dir}/${real_authorized_keys_file}":
+            ensure  => present,
+            mode    => '0644',
+            owner   => 0,
             group   => 0,
+            source  => "${real_backupkeys}/${real_user}_id_${keytype}.pub",
+            require => File[$real_ssh_dir],
             tag     => $real_backuptag,
-            require => [
-              User[$real_user],
-              File[$real_dir],
-              ],
           }
         }
       }
-      case $key {
-        false: {
-          if !defined(File["${real_ssh_dir}/${real_authorized_keys_file}"]) {
-            @@file { "${real_ssh_dir}/${real_authorized_keys_file}":
-              ensure  => present,
-              mode    => '0644',
-              owner   => 0,
-              group   => 0,
-              source  => "${real_backupkeys}/${real_user}_id_${keytype}.pub",
-              require => File[$real_ssh_dir],
-              tag     => $real_backuptag,
-            }
-          }
+      default: {
+        @@ssh_authorized_key{ $real_user:
+          type    => $keytype,
+          key     => $key,
+          user    => $real_user,
+          target  => "${real_ssh_dir}/${real_authorized_keys_file}",
+          tag     => $real_backuptag,
+          require => User[$real_user],
         }
-        default: {
-          @@ssh_authorized_key{ $real_user:
-            type    => $keytype,
-            key     => $key,
-            user    => $real_user,
-            target  => "${real_ssh_dir}/${real_authorized_keys_file}",
-            tag     => $real_backuptag,
-            require => User[$real_user],
+      }
+    }
+    case $uid {
+      false: {
+        if !defined(User[$real_user]) {
+          @@user { $real_user:
+            ensure     => 'present',
+            gid        => $gid,
+            comment    => "${name} backup sandbox",
+            home       => $real_dir,
+            managehome => true,
+            shell      => '/bin/sh',
+            password   => '*',
+            require    => Group['backupninjas'],
+            tag        => $real_backuptag,
           }
         }
       }
-      case $uid {
-        false: {
-          if !defined(User[$real_user]) {
-            @@user { $real_user:
-              ensure     => 'present',
-              gid        => $gid,
-              comment    => "${name} backup sandbox",
-              home       => $real_dir,
-              managehome => true,
-              shell      => '/bin/sh',
-              password   => '*',
-              require    => Group['backupninjas'],
-              tag        => $real_backuptag,
-            }
-          }
-        }
-        default: {
-          if !defined(User[$real_user]) {
-            @@user { $real_user:
-              ensure     => 'present',
-              uid        => $uid,
-              gid        => $gid,
-              comment    => "${name} backup sandbox",
-              home       => $real_dir,
-              managehome => true,
-              shell      => '/bin/sh',
-              password   => '*',
-              require    => Group['backupninjas'],
-              tag        => $real_backuptag,
-            }
+      default: {
+        if !defined(User[$real_user]) {
+          @@user { $real_user:
+            ensure     => 'present',
+            uid        => $uid,
+            gid        => $gid,
+            comment    => "${name} backup sandbox",
+            home       => $real_dir,
+            managehome => true,
+            shell      => '/bin/sh',
+            password   => '*',
+            require    => Group['backupninjas'],
+            tag        => $real_backuptag,
           }
         }
       }

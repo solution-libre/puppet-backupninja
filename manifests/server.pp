@@ -47,14 +47,16 @@ class backupninja::server (
 
     file { '/usr/local/bin/checkbackups':
       ensure => 'present',
-      source => "puppet://${servername}/backupninja/checkbackups.pl",
+      source => 'puppet:///modules/backupninja/checkbackups.pl',
       mode   => '0755',
       owner  => root,
       group  => root,
     }
 
     cron { 'checkbackups':
-      command => "/usr/local/bin/checkbackups -d ${backupdir} | /usr/sbin/send_nsca -H ${nagios_server} -c /etc/send_nsca.cfg | grep -v 'sent to host successfully'",
+      command => "/usr/local/bin/checkbackups -d ${backupdir} | \
+/usr/sbin/send_nsca -H ${nagios_server} -c /etc/send_nsca.cfg | \
+grep -v 'sent to host successfully'",
       user    => 'root',
       hour    => '8-23',
       minute  => 59,
