@@ -1,48 +1,45 @@
-Backupninja Module
--------------------
+# backupninja
 
-[![Puppet Forge](http://img.shields.io/puppetforge/v/gnubilafrance/backupninja.svg)](https://forge.puppetlabs.com/gnubilafrance/backupninja)
-[![Build Status](https://travis-ci.org/gnubila-france/puppet-backupninja.png?branch=master)](https://travis-ci.org/gnubila-france/puppet-backupninja)
+[![Puppet Forge Version](http://img.shields.io/puppetforge/v/soli/backupninja.svg)](https://forge.puppetlabs.com/soli/backupninja)
+[![Puppet Forge Downloads](http://img.shields.io/puppetforge/dt/soli/backupninja.svg)](https://forge.puppetlabs.com/soli/backupninja)
+[![Puppet Forge Score](http://img.shields.io/puppetforge/f/soli/backupninja.svg)](https://forge.puppetlabs.com/soli/backupninja)
+[![Build Status](https://travis-ci.org/solution-libre/puppet-backupninja.svg?branch=master)](https://travis-ci.org/solution-libre/puppet-backupninja)
 
-Fork of the official riseuplabs/backupninja module as it is inactive.
+#### Table of Contents
 
-This module helps you configure all of your backups with puppet, using 
-backupninja!
+1. [Module Description - What the module does and why it is useful](#module-description)
+2. [Setup - The basics of getting started with backupninja](#setup)
+    * [Beginning with backupninja](#beginning-with-backupninja)
+3. [Usage - Configuration options and additional functionality](#usage)
+    * [Install header packages](#install-header-packages)
+    * [Install all headers packages and the documentation](#install-all-headers-packages-and-the-documentation)
+    * [Uninstall a backupninja library](#uninstall-a-backupninja-library)
+4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+5. [Limitations - OS compatibility, etc.](#limitations)
+6. [Development - Guide for contributing to the module](#development)
+7. [Contributors](#contributors)
 
-! Upgrade notice !
+## Module Description
 
-If you were previously using this module, some pieces have changed,
-and you need to carefully change your use of them, or you will find
-your backups to be duplicated on your backup server. The important
-part that changed has to do with the rdiff-backup handler, if you
-weren't using that, you don't need to worry.
+This module installs and configures [backupninja](https://labs.riseup.net/code/projects/backupninja).
 
-If you were, you will need to make sure you change all of your
-"$directory" parameters to be "$home" instead, and on your
-backupserver you will need to move all of your backups into
-"$home"/rdiff-backup. Previously, they were put in "$directory", which
-doubled as the home for the user that was created. This caused
-problems with rdiff-backup because of dot files and other things which
-were not part of any rdiff-backup.
+## Setup
 
-Getting started
----------------
+### Beginning with backupninja
 
-First you will need to import the module:
-
-  import "backupninja"
+## Usage
 
 Configure your backup server
 ----------------------------
 
 Now you will need to configure a backup server by adding the following
 to your node definition for that server:
-  
+
   include backupninja::server
 
 By configuring a backupninja::server, this module will automatically
 create sandboxed users on the server for each client for their
-backups. 
+backups.
 
 You may also want to set some variables on your backup server, such as:
 
@@ -104,7 +101,7 @@ backupninja::mysql { all_databases:
 backupninja::rdiff { backup_all:
 	directory => '/media/backupdisk',
 	include => ['/var/backups', '/home', '/var/lib/dpkg/status'],
-	exclude => '/home/*/.gnupg'
+	exclude => '/home/\*/.gnupg'
 }
 
 * A remote rdiff-backup handler:
@@ -154,4 +151,22 @@ To use this feature a few pre-requisites are necessary:
  . backups must be under $home/dup, $home/rdiff-backup depending on method
  . $nagios_server must be set before the class is included
 
+ ## Reference
 
+ ### Classes
+
+ #### Public Classes
+
+ ## Limitations
+
+ RedHat and Debian family OSes are officially supported. Tested and built on Debian and CentOS.
+
+ ## Development
+
+ [Solution Libre](https://www.solution-libre.fr) modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great.
+
+ [Fork this module on GitHub](https://github.com/solution-libre/puppet-backupninja/fork)
+
+ ## Contributors
+
+ The list of contributors can be found at: https://github.com/solution-libre/puppet-backupninja/graphs/contributors

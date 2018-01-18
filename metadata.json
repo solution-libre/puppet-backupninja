@@ -1,14 +1,12 @@
 {
-  "name": "gnubilafrance-backupninja",
+  "name": "soli-backupninja",
   "version": "0.3.1",
-  "author": "Baptiste Grenier <bgrenier@gnubila.fr>",
-  "license": "MIT",
-  "summary": "Simple backup solution management: backupninja",
-
-  "source": "https://github.com/gnubila-france/puppet-backupninja",
-  "project_page": "https://github.com/gnubila-france/puppet-backupninja",
-  "issues_url": "https://github.com/gnubila-france/puppet-backupninja/issues",
-
+  "author": "Solution Libre SAS",
+  "summary": "Puppet module to manage backupninja installation and configuration",
+  "license": "Apache-2.0",
+  "source": "https://github.com/solution-libre/puppet-backupninja",
+  "project_page": "https://github.com/solution-libre/puppet-backupninja",
+  "issues_url": "https://github.com/solution-libre/puppet-backupninja/issues",
   "tags": [ "backup", "backupninja", "shell" ],
 
   "operatingsystem_support": [
