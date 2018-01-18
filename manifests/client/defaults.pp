@@ -25,7 +25,7 @@ class backupninja::client::defaults (
   }
   $real_keydestination = $keydestination ? {
     ''      => '/root/.ssh',
-    kdefault => $keydestination,
+    default => $keydestination,
   }
   $real_keyowner = $keyowner ? {
     ''      => 0,
