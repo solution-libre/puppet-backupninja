@@ -1,6 +1,6 @@
 {
   "name": "soli-backupninja",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": "Solution Libre SAS",
   "summary": "Puppet module to manage backupninja installation and configuration",
   "license": "Apache-2.0",
@@ -34,7 +34,17 @@
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "6",
-        "7"
+        "7",
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "10.04",
+        "12.04",
+        "14.04",
+        "16.04"
       ]
     }
   ],
