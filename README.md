@@ -27,34 +27,37 @@ This module installs and configures [backupninja](https://labs.riseup.net/code/p
 
 ### Beginning with backupninja
 
+@ToDo
+
 ## Usage
 
-Configure your backup server
-----------------------------
+### Configure your backup server
 
 Now you will need to configure a backup server by adding the following
 to your node definition for that server:
-
-  include backupninja::server
+```puppet
+include backupninja::server
+```
 
 By configuring a backupninja::server, this module will automatically
 create sandboxed users on the server for each client for their
 backups.
 
 You may also want to set some variables on your backup server, such as:
+```puppet
+$backupdir = "/backups"
+```
 
-  $backupdir = "/backups"
-
-
-Configure your backup clients
------------------------------
+### Configure your backup clients
 
 The backupninja package and the necessary backup software will be
 installed automatically when you include any of the different handlers
 (as long as you are not handling it elsewhere in your manifests), for
 example:
 
+```puppet
 include backupninja::client::rdiff_backup
+```
 
 In this case, the module will make sure that the backupninja package
 and the required rdiff-backup package are 'installed'/'present' (using
@@ -62,19 +65,19 @@ puppet's ensure parameter language). If you need to specify a specific
 version of either backupninja itself, or the specific programs that
 the handler class installs, you can specify the version you need
 installed by providing a variable, for example:
-
+```puppet
 $backupninja_ensure_version = "0.9.7~bpo50+1"
 $rdiff_backup_ensure_version = "1.2.5-1~bpo40+1"
 $rsync_ensure_version = "3.0.6-1~bpo50+1"
 $duplicity_ensure_version = "0.6.04-1~bpo50+1"
 $debconf_utils_ensure_version = "1.5.28"
 $hwinfo_ensure_version = "16.0-2"
+```
 
 If you do not specify these variables the default 'installed/present'
 version will be installed when you include this class.
 
-Configuring handlers
---------------------
+### Configuring handlers
 
 Depending on which backup method you want to use on your client, you
 can simply specify some configuration options for that handler that are
@@ -88,74 +91,77 @@ included in this module to see your different options.
 Included below are some configuration examples for different handlers.
 
 * An example mysql handler configuration:
-
+```puppet
 backupninja::mysql { all_databases:
 	user => root,
 	backupdir => '/var/backups',
 	compress => true,
 	sqldump => true
 }
+```
 
 * An example rdiff-backup handler configuration:
-
+```puppet
 backupninja::rdiff { backup_all:
 	directory => '/media/backupdisk',
 	include => ['/var/backups', '/home', '/var/lib/dpkg/status'],
 	exclude => '/home/\*/.gnupg'
 }
+```
 
 * A remote rdiff-backup handler:
+```puppet
+backupninja::rdiff { "main":
+    host => "backup.example.com",
+    type => "remote",
+    directory => "/backup/$fqdn",
+    user => "backup-$hostname",
+}
+```
 
-    backupninja::rdiff { "main":
-        host => "backup.example.com",
-        type => "remote",
-        directory => "/backup/$fqdn",
-        user => "backup-$hostname",
-    }
-
-
-Configuring backupninja itself
-------------------------------
+### Configuring backupninja itself
 
 You may wish to configure backupninja itself. You can do that by doing
-the following, and the /etc/backupninja.conf will be managed by
+the following, and the `/etc/backupninja.conf` will be managed by
 puppet, all the backupninja configuration options are available, you
 can find them inside this module as well.
 
 For example:
 
+```puppet
 backupninja::config { conf:
 	loglvl => 3,
 	usecolors => false,
 	reportsuccess => false,
 	reportwarning => true;
 }
+```
 
-
-Nagios alerts about backup freshness
-------------------------------------
+### Nagios alerts about backup freshness
 
 If you set the $nagios_server variable to be the name of your nagios
 server, then a passive nagios service gets setup so that the backup
 server pushes checks, via a cronjob that calls
-/usr/local/bin/checkbackups.pl, to the nagios server to alert about
+`/usr/local/bin/checkbackups.pl`, to the nagios server to alert about
 relative backup freshness.
 
 To use this feature a few pre-requisites are necessary:
+* configure nsca on your backup server (not done via puppet yet)
+* configure nsca on your nagios server (not done via puppet yet)
+* server backup directories are named after their $fqdn
+* using nagios2 module, nagios/nagios3 modules/nativetypes not supported yet
+* using a nagios puppet module that can create passive service checks
+* backups must be under `$home/dup`, `$home/rdiff-backup` depending on method
+* `$nagios_server` must be set before the class is included
 
- . configure nsca on your backup server (not done via puppet yet)
- . configure nsca on your nagios server (not done via puppet yet)
- . server backup directories are named after their $fqdn
- . using nagios2 module, nagios/nagios3 modules/nativetypes not supported yet
- . using a nagios puppet module that can create passive service checks
- . backups must be under $home/dup, $home/rdiff-backup depending on method
- . $nagios_server must be set before the class is included
 
  ## Reference
 
  ### Classes
 
  #### Public Classes
+
+ @ToDo
 
  ## Limitations
 
